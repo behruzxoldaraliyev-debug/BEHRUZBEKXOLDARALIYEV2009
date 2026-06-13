@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ingliz tili — 75 kun</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#07070f;--surface:#0f0f1e;--surface2:#161628;--surface3:#1e1e35;
+  --border:rgba(120,100,255,0.12);--border2:rgba(120,100,255,0.22);
+  --text:#f0eeff;--muted:#7c7a9e;--hint:#3a3858;
+  --purple:#9d8fff;--purple2:#7c6ef5;--purple-dim:rgba(157,143,255,0.15);
+  --green:#4ade80;--red:#f87171;--amber:#fbbf24;--blue:#60a5fa;--pink:#f472b6;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+.bg-canvas{position:fixed;top:0;left:0;right:0;bottom:0;z-index:0;pointer-events:none;overflow:hidden;}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:0.18;animation:orbanim 12s ease-in-out infinite;}
+.orb1{width:500px;height:500px;background:#7c6ef5;top:-100px;left:-100px;animation-delay:0s;}
+.orb2{width:400px;height:400px;background:#f472b6;bottom:-80px;right:-80px;animation-delay:-4s;}
+.orb3{width:300px;height:300px;background:#60a5fa;top:40%;left:60%;animation-delay:-8s;}
+@keyframes orbanim{0%,100%{transform:translate(0,0);}33%{transform:translate(30px,-20px);}66%{transform:translate(-20px,30px);}}
+#login-screen{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;background:rgba(7,7,15,0.97);}
+.login-card{background:var(--surface);border:1px solid var(--border2);border-radius:20px;padding:2.5rem;width:340px;text-align:center;position:relative;z-index:2;}
+.login-logo{font-size:48px;margin-bottom:0.5rem;}
+.login-title{font-size:22px;font-weight:600;margin-bottom:4px;}
+.login-sub{font-size:14px;color:var(--muted);margin-bottom:2rem;}
+.login-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'Inter',sans-serif;font-size:16px;padding:12px 16px;margin-bottom:12px;outline:none;letter-spacing:0.1em;}
+.login-input:focus{border-color:var(--purple2);}
+.login-btn{width:100%;background:linear-gradient(135deg,var(--purple2),#a855f7);border:none;border-radius:10px;color:#fff;font-family:'Inter',sans-serif;font-size:15px;font-weight:600;padding:13px;cursor:pointer;}
+.login-btn:hover{opacity:0.9;}
+.login-error{color:var(--red);font-size:13px;margin-top:8px;display:none;}
+#app{display:none;position:relative;z-index:1;}
+.header{background:rgba(15,15,30,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
+.header-logo{font-size:20px;font-weight:700;background:linear-gradient(135deg,var(--purple),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.header-date{font-size:13px;color:var(--muted);}
+.header-left{display:flex;align-items:center;gap:12px;}
+.header-right{display:flex;align-items:center;gap:12px;}
+.streak-pill{display:flex;align-items:center;gap:6px;background:var(--purple-dim);border:1px solid var(--border2);border-radius:20px;padding:6px 14px;font-size:14px;font-weight:500;color:var(--purple);}
+.logout-btn{background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--muted);font-family:'Inter',sans-serif;font-size:13px;padding:6px 12px;cursor:pointer;}
+.logout-btn:hover{color:var(--text);}
+.container{max-width:960px;margin:0 auto;padding:2rem 1.5rem;}
+.metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:1.5rem;}
+.metric{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem;text-align:center;}
+.metric-val{font-size:26px;font-weight:600;font-family:'JetBrains Mono',monospace;line-height:1;margin-bottom:4px;}
+.metric-val.purple{background:linear-gradient(135deg,var(--purple),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.metric-val.green{color:var(--green);}.metric-val.amber{color:var(--amber);}.metric-val.blue{color:var(--blue);}
+.metric-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;}
+.nav{display:flex;gap:4px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:4px;margin-bottom:1.5rem;overflow-x:auto;}
+.nav-btn{flex:1;min-width:70px;padding:8px 10px;border:none;background:transparent;color:var(--muted);font-family:'Inter',sans-serif;font-size:13px;cursor:pointer;border-radius:8px;white-space:nowrap;}
+.nav-btn.active{background:var(--surface2);color:var(--text);font-weight:500;}
+.nav-btn:hover:not(.active){color:var(--text);}
+.panel{display:none;}.panel.active{display:block;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.25rem;margin-bottom:1rem;}
+.card-title{font-size:11px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:1rem;}
+.task-row{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--border);cursor:pointer;}
+.task-row:last-child{border-bottom:none;}
+.cb{width:22px;height:22px;border-radius:6px;border:1.5px solid var(--hint);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.cb.done{background:var(--green);border-color:var(--green);}
+.cb.done::after{content:'';width:5px;height:9px;border:2px solid #07070f;border-top:none;border-left:none;transform:rotate(45deg) translate(-1px,-1px);display:block;}
+.task-text{font-size:14px;color:var(--text);flex:1;}.task-text.done{text-decoration:line-through;color:var(--hint);}
+.task-pts{font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+.btn-main{width:100%;padding:13px;background:linear-gradient(135deg,var(--purple2),#a855f7);border:none;border-radius:10px;color:#fff;font-family:'Inter',sans-serif;font-size:15px;font-weight:600;cursor:pointer;margin-top:1rem;}
+.btn-main:hover{opacity:0.9;}
+.btn-sec{width:100%;padding:10px;background:transparent;border:1px solid var(--border2);border-radius:10px;color:var(--muted);font-family:'Inter',sans-serif;font-size:14px;cursor:pointer;margin-top:8px;}
+.btn-sec:hover{color:var(--text);background:var(--surface2);}
+.timer-big{font-family:'JetBrains Mono',monospace;font-size:64px;font-weight:500;text-align:center;background:linear-gradient(135deg,var(--purple),var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;padding:1.5rem 0 1rem;}
+.prog-wrap{background:var(--surface2);border-radius:4px;height:6px;overflow:hidden;margin-bottom:6px;}
+.prog-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--purple2),var(--pink));transition:width 1s linear;}
+.prog-txt{font-size:13px;color:var(--muted);text-align:center;margin-bottom:1rem;}
+.timer-btns{display:flex;gap:8px;}
+.tbtn{flex:1;background:var(--surface2);border:1px solid var(--border2);color:var(--text);padding:10px;border-radius:8px;font-family:'Inter',sans-serif;font-size:14px;cursor:pointer;}
+.tbtn.on{background:var(--purple-dim);color:var(--purple);}
+.dots-wrap{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:1rem;}
+.dot{width:14px;height:14px;border-radius:50%;cursor:default;position:relative;}
+.dot::after{content:attr(data-tip);position:absolute;bottom:18px;left:50%;transform:translateX(-50%);background:var(--surface3);border:1px solid var(--border2);color:var(--text);font-size:11px;padding:2px 8px;border-radius:4px;white-space:nowrap;opacity:0;pointer-events:none;z-index:5;}
+.dot:hover::after{opacity:1;}
+.d-done{background:var(--green);}.d-today{background:var(--purple);}.d-missed{background:var(--red);}.d-skip{background:var(--surface2);border:1px solid var(--hint);}
+.legend{display:flex;gap:1rem;flex-wrap:wrap;font-size:12px;color:var(--muted);}
+.legend span{display:flex;align-items:center;gap:5px;}
+.ld{width:10px;height:10px;border-radius:50%;display:inline-block;}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:1rem;}
+.stat-box{background:var(--surface2);border-radius:10px;padding:14px;text-align:center;}
+.stat-val{font-size:24px;font-weight:600;font-family:'JetBrains Mono',monospace;color:var(--purple);}
+.stat-label{font-size:11px;color:var(--muted);margin-top:2px;}
+.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:1rem;}
+.week-day{background:var(--surface2);border-radius:8px;padding:10px 4px;text-align:center;}
+.week-day-name{font-size:11px;color:var(--muted);margin-bottom:4px;}
+.week-day-val{font-size:18px;font-weight:600;font-family:'JetBrains Mono',monospace;color:var(--green);}
+.week-day-val.miss{color:var(--red);}
+.foiz-bar{background:var(--surface2);border-radius:8px;overflow:hidden;height:28px;margin-bottom:8px;}
+.foiz-fill{height:100%;background:linear-gradient(90deg,var(--purple2),var(--pink));border-radius:8px;display:flex;align-items:center;padding-left:12px;font-size:13px;font-weight:500;color:#fff;transition:width 0.8s ease;min-width:40px;}
+.foiz-label{font-size:13px;color:var(--muted);margin-bottom:4px;}
+.bolim-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.bolim-card{background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:1rem;cursor:pointer;}
+.bolim-card:hover{border-color:var(--border2);background:var(--surface3);}
+.bolim-icon{font-size:24px;margin-bottom:8px;}.bolim-name{font-size:15px;font-weight:500;margin-bottom:4px;}.bolim-desc{font-size:12px;color:var(--muted);}
+.add-bolim{background:transparent;border:1px dashed var(--hint);border-radius:12px;padding:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;color:var(--muted);font-size:14px;width:100%;margin-top:10px;}
+.add-bolim:hover{border-color:var(--purple2);color:var(--purple);}
+.back-btn{background:transparent;border:none;color:var(--purple);font-family:'Inter',sans-serif;font-size:14px;cursor:pointer;padding:0;margin-bottom:1rem;display:flex;align-items:center;gap:4px;}
+.entry-box{background:var(--surface2);border-radius:10px;padding:12px;margin-bottom:8px;border-left:3px solid var(--purple2);}
+.entry-date{font-size:11px;color:var(--muted);margin-bottom:4px;}.entry-text{font-size:14px;}
+.note-area{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'Inter',sans-serif;font-size:14px;padding:12px;resize:vertical;min-height:100px;outline:none;}
+.note-area:focus{border-color:var(--purple2);}
+.modal-overlay{position:fixed;inset:0;z-index:50;background:rgba(7,7,15,0.85);display:none;align-items:center;justify-content:center;}
+.modal-overlay.show{display:flex;}
+.modal{background:var(--surface);border:1px solid var(--border2);border-radius:16px;padding:2rem;width:380px;z-index:2;}
+.modal-title{font-size:18px;font-weight:600;margin-bottom:8px;}
+.modal-sub{font-size:14px;color:var(--muted);margin-bottom:1.5rem;}
+.reason-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.reason-btn{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px;color:var(--muted);font-family:'Inter',sans-serif;font-size:13px;cursor:pointer;}
+.reason-btn:hover{border-color:var(--purple2);color:var(--purple);}
+.mini-input{width:90px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:15px;padding:6px 10px;text-align:center;outline:none;}
+.mini-input:focus{border-color:var(--purple2);}
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(80px);background:var(--surface2);border:1px solid var(--border2);color:var(--text);padding:10px 20px;border-radius:10px;font-size:14px;transition:transform 0.3s;z-index:200;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+/* DARSLAR */
+.dars-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer;}
+.dars-row:last-child{border-bottom:none;}
+.dars-cb{width:22px;height:22px;border-radius:6px;border:1.5px solid var(--hint);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.dars-cb.done{background:var(--green);border-color:var(--green);}
+.dars-cb.done::after{content:'';width:5px;height:9px;border:2px solid #07070f;border-top:none;border-left:none;transform:rotate(45deg) translate(-1px,-1px);display:block;}
+.dars-name{flex:1;font-size:14px;color:var(--text);}.dars-name.done{text-decoration:line-through;color:var(--hint);}
+.dars-cat{font-size:11px;color:var(--muted);background:var(--surface2);padding:2px 8px;border-radius:10px;}
+.dars-del{background:none;border:none;color:var(--hint);cursor:pointer;font-size:14px;padding:2px 6px;}
+.dars-del:hover{color:var(--red);}
+.dars-pbar{background:var(--surface2);border-radius:4px;height:8px;overflow:hidden;margin-bottom:10px;}
+.dars-pfill{height:100%;background:linear-gradient(90deg,var(--purple2),var(--green));border-radius:4px;transition:width 0.4s;}
+.dars-info-box{background:var(--surface2);border-radius:10px;padding:12px 14px;margin-bottom:10px;display:flex;align-items:center;gap:12px;}
+.dars-badge{background:var(--purple-dim);border:1px solid var(--border2);border-radius:10px;padding:3px 10px;font-size:12px;color:var(--purple);}
+.add-dars-row{display:flex;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);flex-wrap:wrap;}
+.text-inp{flex:1;min-width:140px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Inter',sans-serif;font-size:14px;padding:8px 12px;outline:none;}
+.text-inp:focus{border-color:var(--purple2);}
+.cat-sel{background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;padding:8px 10px;outline:none;cursor:pointer;}
+.add-dars-btn{background:var(--purple-dim);border:1px solid var(--border2);border-radius:8px;color:var(--purple);font-family:'Inter',sans-serif;font-size:13px;font-weight:500;padding:8px 14px;cursor:pointer;}
+.add-dars-btn:hover{background:var(--purple2);color:#fff;}
+.hist-row{padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;}
+.hist-row:last-child{border-bottom:none;}
+@media(max-width:640px){.metrics{grid-template-columns:repeat(3,1fr);}.bolim-grid{grid-template-columns:1fr;}.header{padding:1rem;}.container{padding:1rem;}.timer-big{font-size:40px;}}
+</style>
+</head>
+<body>
+<div class="bg-canvas">
+  <div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div>
+</div>
+<div id="login-screen">
+  <div class="bg-canvas"><div class="orb orb1"></div><div class="orb orb2"></div></div>
+  <div class="login-card">
+    <div class="login-logo">🎯</div>
+    <div class="login-title">Ingliz tili 75 kun</div>
+    <div class="login-sub">Kirish uchun parolni tering</div>
+    <input type="password" class="login-input" id="pass-input" placeholder="Parol" onkeydown="if(event.key==='Enter')login()">
+    <button class="login-btn" onclick="login()">Kirish</button>
+    <div class="login-error" id="login-err">Parol noto'g'ri!</div>
+  </div>
+</div>
+<div id="app">
+  <div class="header">
+    <div class="header-left">
+      <div class="header-logo">75 KUN</div>
+      <div class="header-date" id="hdate"></div>
+    </div>
+    <div class="header-right">
+      <div class="streak-pill">&#9889; <span id="hstreak">0</span> kun streak</div>
+      <button class="logout-btn" onclick="logout()">Chiqish</button>
+    </div>
+  </div>
+  <div class="container">
+    <div class="metrics">
+      <div class="metric"><div class="metric-val purple" id="m-day">1</div><div class="metric-label">Kun</div></div>
+      <div class="metric"><div class="metric-val green" id="m-streak">0</div><div class="metric-label">Streak</div></div>
+      <div class="metric"><div class="metric-val amber" id="m-words">2000</div><div class="metric-label">So'zlar</div></div>
+      <div class="metric"><div class="metric-val blue" id="m-pct">0%</div><div class="metric-label">Progress</div></div>
+      <div class="metric"><div class="metric-val" id="m-left">75</div><div class="metric-label">Qoldi</div></div>
+    </div>
+    <div class="nav">
+      <button class="nav-btn active" onclick="showPanel('bugun')">Bugun</button>
+      <button class="nav-btn" onclick="showPanel('darslar')">Darslar</button>
+      <button class="nav-btn" onclick="showPanel('timer')">Timer</button>
+      <button class="nav-btn" onclick="showPanel('hafta')">Haftalik</button>
+      <button class="nav-btn" onclick="showPanel('tahlil')">Tahlil</button>
+      <button class="nav-btn" onclick="showPanel('progress')">Progress</button>
+      <button class="nav-btn" onclick="showPanel('bolimlar')">Bo'limlar</button>
+      <button class="nav-btn" onclick="showPanel('eslatma')">Eslatma</button>
+    </div>
+    <div id="panel-bugun" class="panel active">
+      <div class="card">
+        <div class="card-title">Bugungi asosiy vazifalar</div>
+        <div id="tasks-list"></div>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);">
+          <span style="font-size:14px;color:var(--muted);">Yodladim:</span>
+          <input type="number" class="mini-input" id="words-inp" min="0" max="300" value="0" onchange="S.wordsToday=+this.value;save()">
+          <span style="font-size:14px;color:var(--muted);">ta so'z</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Bugungi darslar</div>
+        <div id="bugun-dars-info"></div>
+        <div id="bugun-dars-list"></div>
+      </div>
+      <button class="btn-main" onclick="completeDay()">Kunni yakunla</button>
+      <button class="btn-sec" onclick="resetDay()">Qayta boshlash</button>
+    </div>
+    <div id="panel-darslar" class="panel">
+      <div class="card">
+        <div class="card-title">Darslar — Kunlik maqsad: 5 ta</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:13px;color:var(--muted);">
+          <span>Bugun: <b id="dars-done-count" style="color:var(--green)">0</b>/5 ta</span>
+          <span class="dars-badge">Jami: <span id="dars-total-count">0</span></span>
+        </div>
+        <div class="dars-pbar"><div class="dars-pfill" id="dars-pfill" style="width:0%"></div></div>
+        <div id="darslar-list"></div>
+        <div class="add-dars-row">
+          <input type="text" class="text-inp" id="dars-inp" placeholder="Dars nomi (masalan: Present Perfect)">
+          <select class="cat-sel" id="cat-sel">
+            <option value="Grammar">Grammar</option>
+            <option value="Vocabulary">Vocabulary</option>
+            <option value="Speaking">Speaking</option>
+            <option value="Listening">Listening</option>
+            <option value="Reading">Reading</option>
+            <option value="Writing">Writing</option>
+            <option value="Boshqa">Boshqa</option>
+          </select>
+          <button class="add-dars-btn" onclick="addDars()">+ Qo'shish</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Kunlik dars tarixi</div>
+        <div id="dars-tarix"></div>
+      </div>
+    </div>
+    <div id="panel-timer" class="panel">
+      <div class="card">
+        <div class="card-title">2 soatlik sessiya</div>
+        <div class="timer-big" id="timer-disp">2:00:00</div>
+        <div class="prog-wrap"><div class="prog-fill" id="t-fill" style="width:0%"></div></div>
+        <div class="prog-txt" id="t-pct">0% tugallandi</div>
+        <div class="timer-btns">
+          <button class="tbtn" id="play-btn" onclick="toggleTimer()">&#9654; Boshlash</button>
+          <button class="tbtn" onclick="resetTimer()">&#8635; Reset</button>
+        </div>
+      </div>
+    </div>
+    <div id="panel-hafta" class="panel">
+      <div class="card">
+        <div class="card-title">Bu hafta</div>
+        <div class="week-grid" id="week-grid"></div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:1rem;">
+          <div class="stat-box"><div class="stat-val" id="w-done">0</div><div class="stat-label">Bajarildi</div></div>
+          <div class="stat-box"><div class="stat-val" id="w-words">0</div><div class="stat-label">So'zlar</div></div>
+          <div class="stat-box"><div class="stat-val" id="w-miss">0</div><div class="stat-label">O'tkazildi</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">75 kun ko'rinishi</div>
+        <div id="month-grid" style="display:grid;grid-template-columns:repeat(15,1fr);gap:4px;"></div>
+      </div>
+    </div>
+    <div id="panel-tahlil" class="panel">
+      <div class="card">
+        <div class="card-title">O'rganish tahlili</div>
+        <div style="margin-bottom:1.5rem;"><div class="foiz-label">Umumiy progress (75 kundan)</div><div class="foiz-bar"><div class="foiz-fill" id="f-prog" style="width:0%">0%</div></div></div>
+        <div style="margin-bottom:1.5rem;"><div class="foiz-label">Streak samaradorligi</div><div class="foiz-bar"><div class="foiz-fill" id="f-streak" style="width:0%;background:linear-gradient(90deg,#4ade80,#22d3ee)">0%</div></div></div>
+        <div style="margin-bottom:1.5rem;"><div class="foiz-label">So'z maqsadi (3750 ta)</div><div class="foiz-bar"><div class="foiz-fill" id="f-words" style="width:0%;background:linear-gradient(90deg,#fbbf24,#f97316)">0%</div></div></div>
+        <div style="margin-bottom:1.5rem;"><div class="foiz-label">Darslar bajarish foizi</div><div class="foiz-bar"><div class="foiz-fill" id="f-dars" style="width:0%;background:linear-gradient(90deg,#4ade80,#7c6ef5)">0%</div></div></div>
+        <div><div class="foiz-label">Vazifalar bajarish foizi</div><div class="foiz-bar"><div class="foiz-fill" id="f-tasks" style="width:0%;background:linear-gradient(90deg,#f472b6,#a855f7)">0%</div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Rekordlar</div>
+        <div class="stat-grid">
+          <div class="stat-box"><div class="stat-val" id="r-streak">0</div><div class="stat-label">Eng uzun streak</div></div>
+          <div class="stat-box"><div class="stat-val" id="r-words">0</div><div class="stat-label">Eng ko'p so'z</div></div>
+          <div class="stat-box"><div class="stat-val" id="r-dars">0</div><div class="stat-label">Jami dars</div></div>
+        </div>
+      </div>
+    </div>
+    <div id="panel-progress" class="panel">
+      <div class="card">
+        <div class="card-title">75 kunlik yo'l</div>
+        <div class="dots-wrap" id="dots-wrap"></div>
+        <div class="legend">
+          <span><span class="ld" style="background:var(--green)"></span>Bajarildi</span>
+          <span><span class="ld" style="background:var(--purple)"></span>Bugun</span>
+          <span><span class="ld" style="background:var(--red)"></span>O'tkazildi</span>
+          <span><span class="ld" style="background:var(--surface2);border:1px solid var(--hint)"></span>Kelgusi</span>
+        </div>
+      </div>
+    </div>
+    <div id="panel-bolimlar" class="panel">
+      <div id="bolim-list-view">
+        <div class="bolim-grid" id="bolim-grid"></div>
+        <button class="add-bolim" onclick="addBolim()">+ Yangi bo'lim qo'shish</button>
+      </div>
+      <div id="bolim-detail-view" style="display:none;">
+        <button class="back-btn" onclick="closeBolim()">&#8592; Orqaga</button>
+        <div class="card">
+          <div class="card-title" id="bd-title"></div>
+          <div id="bd-entries"></div>
+          <textarea class="note-area" id="bd-inp" placeholder="Yozing..." style="margin-top:1rem;"></textarea>
+          <button class="btn-main" onclick="saveBolimEntry()">Saqlash</button>
+        </div>
+      </div>
+    </div>
+    <div id="panel-eslatma" class="panel">
+      <div class="card">
+        <div class="card-title">Bugungi eslatma — Kun <span id="note-day-num">1</span></div>
+        <textarea class="note-area" id="note-inp" placeholder="Bugun nima o'rgandim, qiynaldim..."></textarea>
+      </div>
+      <div class="card">
+        <div class="card-title">Oldingi kunlar</div>
+        <div id="prev-notes"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-overlay" id="miss-modal">
+  <div class="modal">
+    <div class="modal-title">Kecha o'tkazib yubordingizmi?</div>
+    <div class="modal-sub">Sababi nima edi?</div>
+    <div class="reason-btns">
+      <button class="reason-btn" onclick="saveReason('Vaqt bolmadi')">Vaqt bo'lmadi</button>
+      <button class="reason-btn" onclick="saveReason('Charchagan')">Charchagan</button>
+      <button class="reason-btn" onclick="saveReason('Unutdim')">Unutdim</button>
+      <button class="reason-btn" onclick="saveReason('Boshqa ish')">Boshqa ish</button>
+      <button class="reason-btn" onclick="saveReason('Kasal')">Kasal</button>
+      <button class="reason-btn" onclick="saveReason('Boshqa')">Boshqa</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+var PASS = 'bekhruzbek75';
+var TOTAL = 75;
+var MAQSAD = 5;
+var TASKS = [
+  {text:"50 ta yangi so'z yodla (Anki)", pts:"50 so'z"},
+  {text:"30 daqiqa ingliz audio yoki serial", pts:"30 daq"},
+  {text:"5 ta ingliz gapi yoz", pts:"5 gap"},
+  {text:"Kecha yodlaganlarni takrorla", pts:"takror"}
+];
+var DEF_BOLIMLAR = [
+  {id:'hayot',icon:'🏠',name:'Kundalik hayot',desc:'Kunlik voqealar',entries:[]},
+  {id:'vocab',icon:'📖',name:"Yangi so'zlar",desc:'Yodlagan so\'zlarim',entries:[]},
+  {id:'grammar',icon:'✏️',name:'Grammatika',desc:"O'rgangan zamonlar",entries:[]},
+  {id:'speaking',icon:'🗣',name:'Speaking',desc:'Gapirish mashqlari',entries:[]}
+];
+
+var S = {
+  day:1, streak:0, longestStreak:0,
+  completedDays:[], missedDays:[], missReasons:{},
+  tasksDone:[false,false,false,false],
+  wordsToday:0, totalWords:2000,
+  wordsPerDay:{}, totalTasksDone:0, totalTasksPossible:0,
+  bestWordsDay:0, notes:{},
+  bolimlar:null,
+  darslar:[], darslarDone:{}, totalDarsDone:0,
+  lastDate:''
+};
+
+var activeBolim = null;
+var timerSec = 7200, timerOn = false, timerInt = null;
+
+function loadData(){
+  try{
+    var d = localStorage.getItem('eng75v5');
+    if(d){ var p=JSON.parse(d); for(var k in p) S[k]=p[k]; }
+  }catch(e){}
+  if(!S.bolimlar) S.bolimlar = JSON.parse(JSON.stringify(DEF_BOLIMLAR));
+  if(!S.darslar) S.darslar = [];
+  if(!S.darslarDone) S.darslarDone = {};
+  if(!S.totalDarsDone) S.totalDarsDone = 0;
+  checkDay();
+}
+
+function save(){
+  try{ localStorage.setItem('eng75v5', JSON.stringify(S)); }catch(e){}
+}
+
+function checkDay(){
+  var today = new Date().toDateString();
+  if(S.lastDate && S.lastDate !== today){
+    var pd = S.day;
+    if(S.completedDays.indexOf(pd) === -1){
+      S.missedDays.push(pd);
+      S.streak = 0;
+      document.getElementById('miss-modal').classList.add('show');
+    }
+    S.wordsToday = 0;
+    S.tasksDone = [false,false,false,false];
+    if(S.completedDays.indexOf(pd) === -1 && pd < TOTAL) S.day++;
+  }
+  S.lastDate = new Date().toDateString();
+  save();
+}
+
+function saveReason(r){
+  S.missReasons['d'+(S.day-1)] = r;
+  save();
+  document.getElementById('miss-modal').classList.remove('show');
+  toast('Sabab saqlandi. Bugun zo\'r qiling!');
+}
+
+function login(){
+  var v = document.getElementById('pass-input').value;
+  if(v === PASS){
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    loadData();
+    updateUI();
+  } else {
+    document.getElementById('login-err').style.display = 'block';
+    document.getElementById('pass-input').value = '';
+    setTimeout(function(){ document.getElementById('login-err').style.display='none'; }, 2000);
+  }
+}
+
+function logout(){
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('pass-input').value = '';
+}
+
+function showPanel(name){
+  var all = ['bugun','darslar','timer','hafta','tahlil','progress','bolimlar','eslatma'];
+  for(var i=0;i<all.length;i++){
+    document.getElementById('panel-'+all[i]).classList.toggle('active', all[i]===name);
+  }
+  var btns = document.querySelectorAll('.nav-btn');
+  for(var i=0;i<btns.length;i++) btns[i].classList.toggle('active', all[i]===name);
+  if(name==='progress') renderDots();
+  if(name==='hafta') renderWeek();
+  if(name==='tahlil') renderTahlil();
+  if(name==='eslatma') renderNotes();
+  if(name==='bolimlar') renderBolimlar();
+  if(name==='darslar') renderDarslar();
+}
+
+function toggleTask(i){
+  S.tasksDone[i] = !S.tasksDone[i];
+  save(); renderTasks();
+}
+
+function completeDay(){
+  // Barcha asosiy vazifalarni tekshirish sharti muvaffaqiyatli olib tashlandi!
+  if(S.completedDays.indexOf(S.day) !== -1){ toast('Bu kun allaqachon bajarilgan!'); return; }
+  S.completedDays.push(S.day);
+  S.streak++;
+  if(S.streak > S.longestStreak) S.longestStreak = S.streak;
+  S.wordsPerDay['d'+S.day] = S.wordsToday;
+  if(S.wordsToday > S.bestWordsDay) S.bestWordsDay = S.wordsToday;
+  S.totalWords += S.wordsToday;
+  S.totalTasksDone += S.tasksDone.filter(function(x){return x;}).length;
+  S.totalTasksPossible += 4;
+  if(S.day < TOTAL) S.day++;
+  S.tasksDone = [false,false,false,false];
+  S.wordsToday = 0;
+  save(); updateUI();
+  var dc = getTodayDone().length;
+  toast('Barakalla! ' + S.streak + ' kunlik streak! ' + dc + ' ta dars bajardingiz!');
+}
+
+function resetDay(){
+  S.tasksDone = [false,false,false,false];
+  S.wordsToday = 0;
+  save(); renderTasks();
+  document.getElementById('words-inp').value = 0;
+}
+
+function renderTasks(){
+  var list = document.getElementById('tasks-list');
+  list.innerHTML = '';
+  for(var i=0;i<TASKS.length;i++){
+    var t = TASKS[i], done = S.tasksDone[i];
+    var row = document.createElement('div');
+    row.className = 'task-row';
+    row.setAttribute('data-i', i);
+    row.onclick = (function(idx){ return function(){ toggleTask(idx); }; })(i);
+    row.innerHTML = '<div class="cb '+(done?'done':'')+'"></div><div class="task-text '+(done?'done':'')+'">'+t.text+'</div><div class="task-pts">'+t.pts+'</div>';
+    list.appendChild(row);
+  }
+  document.getElementById('words-inp').value = S.wordsToday;
+}
+
+// ===== DARSLAR =====
+function getTodayDone(){
+  return S.darslarDone['d'+S.day] || [];
+}
+
+function toggleDars(id){
+  if(!S.darslarDone['d'+S.day]) S.darslarDone['d'+S.day] = [];
+  var arr = S.darslarDone['d'+S.day];
+  var idx = arr.indexOf(id);
+  if(idx === -1){ arr.push(id); S.totalDarsDone++; }
+  else{ arr.splice(idx,1); S.totalDarsDone = Math.max(0, S.totalDarsDone-1); }
+  save();
+  renderBugunDars();
+  var dp = document.getElementById('panel-darslar');
+  if(dp && dp.classList.contains('active')) renderDarslar();
+}
+
+function addDars(){
+  var name = document.getElementById('dars-inp').value.trim();
+  if(!name){ toast('Dars nomini yozing!'); return; }
+  var cat = document.getElementById('cat-sel').value;
+  S.darslar.push({id:'d'+Date.now(), name:name, cat:cat, day:S.day});
+  document.getElementById('dars-inp').value = '';
+  save(); renderDarslar(); renderBugunDars();
+  toast("Dars qo'shildi!");
+}
+
+function delDars(id){
+  if(!confirm('Darsni o\'chirasizmi?')) return;
+  S.darslar = S.darslar.filter(function(d){ return d.id !== id; });
+  var keys = Object.keys(S.darslarDone);
+  for(var i=0;i<keys.length;i++){
+    S.darslarDone[keys[i]] = S.darslarDone[keys[i]].filter(function(x){ return x !== id; });
+  }
+  save(); renderDarslar(); renderBugunDars();
+  toast("Dars o'chirildi");
+}
+
+function renderBugunDars(){
+  var done = getTodayDone();
+  var pct = Math.min(100, Math.round(done.length / MAQSAD * 100));
+  var icon = done.length >= MAQSAD ? '🏆' : done.length > 0 ? '🔥' : '📖';
+  var txt = done.length >= MAQSAD ? 'Kunlik maqsadga yetdingiz!' :
+    done.length > 0 ? done.length+'/'+MAQSAD+' ta bajarildi' : 'Hali dars bajarilmadi';
+  var info = document.getElementById('bugun-dars-info');
+  if(!info) return;
+  info.innerHTML = '<div class="dars-info-box"><div style="font-size:24px">'+icon+'</div><div style="flex:1"><div style="font-size:14px;font-weight:500">'+txt+'</div><div style="font-size:12px;color:var(--muted)">Kunlik maqsad: '+MAQSAD+' ta dars</div></div><div class="dars-badge">'+done.length+'/'+MAQSAD+'</div></div><div class="dars-pbar"><div class="dars-pfill" style="width:'+pct+'%"></div></div>';
+  var list = document.getElementById('bugun-dars-list');
+  if(!S.darslar.length){
+    list.innerHTML = '<div style="color:var(--hint);font-size:14px;padding:8px 0">"Darslar" bo\'limidan dars qo\'shing.</div>';
+    return;
+  }
+  var html = '';
+  for(var i=0;i<S.darslar.length;i++){
+    var d = S.darslar[i];
+    var isDone = done.indexOf(d.id) !== -1;
+    html += '<div class="dars-row" onclick="toggleDars(\''+d.id+'\')">';
+    html += '<div class="dars-cb '+(isDone?'done':'')+'"></div>';
+    html += '<div class="dars-name '+(isDone?'done':'')+'">'+d.name+'</div>';
+    html += '<div class="dars-cat">'+d.cat+'</div>';
+    html += '</div>';
+  }
+  list.innerHTML = html;
+}
+
+function renderDarslar(){
+  var done = getTodayDone();
+  var pct = Math.min(100, Math.round(done.length / MAQSAD * 100));
+  var dc = document.getElementById('dars-done-count');
+  var tc = document.getElementById('dars-total-count');
+  var pf = document.getElementById('dars-pfill');
+  if(dc) dc.textContent = done.length;
+  if(tc) tc.textContent = S.totalDarsDone;
+  if(pf) pf.style.width = pct + '%';
+  var list = document.getElementById('darslar-list');
+  if(!S.darslar.length){
+    list.innerHTML = '<div style="color:var(--hint);font-size:14px;padding:12px 0">Hali dars yo\'q. Pastdan qo\'shing.</div>';
+  } else {
+    var html = '';
+    for(var i=0;i<S.darslar.length;i++){
+      var d = S.darslar[i];
+      var isDone = done.indexOf(d.id) !== -1;
+      html += '<div class="dars-row">';
+      html += '<div class="dars-cb '+(isDone?'done':'')+'" onclick="toggleDars(\''+d.id+'\')"></div>';
+      html += '<div class="dars-name '+(isDone?'done':'')+'" onclick="toggleDars(\''+d.id+'\')">'+d.name+'</div>';
+      html += '<div class="dars-cat">'+d.cat+'</div>';
+      html += '<button class="dars-del" onclick="event.stopPropagation();delDars(\''+d.id+'\')">&#10005;</button>';
+      html += '</div>';
+    }
+    list.innerHTML = html;
+  }
+  var hist = document.getElementById('dars-tarix');
+  var keys = Object.keys(S.darslarDone).filter(function(k){ return S.darslarDone[k] && S.darslarDone[k].length > 0; });
+  keys = keys.slice(-7).reverse();
+  if(!keys.length){ hist.innerHTML = '<div style="color:var(--hint);font-size:14px">Hali tarix yo\'q.</div>'; return; }
+  var h = '';
+  for(var i=0;i<keys.length;i++){
+    var k = keys[i];
+    var dn = k.replace('d','');
+    var ids = S.darslarDone[k];
+    var names = [];
+    for(var j=0;j<ids.length;j++){
+      var found = null;
+      for(var m=0;m<S.darslar.length;m++) if(S.darslar[m].id===ids[j]) found=S.darslar[m];
+      if(found) names.push(found.name);
+    }
+    if(!names.length) continue;
+    h += '<div class="hist-row"><span style="color:var(--purple);font-size:12px">Kun '+dn+'</span> &mdash; <span style="color:var(--muted)">'+names.join(', ')+' <b style="color:var(--green)">('+names.length+' ta)</b></span></div>';
+  }
+  hist.innerHTML = h || '<div style="color:var(--hint);font-size:14px">Hali tarix yo\'q.</div>';
+}
+
+// ===== PROGRESS =====
+function renderDots(){
+  var wrap = document.getElementById('dots-wrap');
+  wrap.innerHTML = '';
+  for(var i=1;i<=TOTAL;i++){
+    var d = document.createElement('div');
+    d.className = 'dot';
+    var tip = 'Kun '+i;
+    if(S.completedDays.indexOf(i)!==-1) tip+=' ✓';
+    else if(S.missReasons['d'+i]) tip+=' ('+S.missReasons['d'+i]+')';
+    d.setAttribute('data-tip', tip);
+    if(S.completedDays.indexOf(i)!==-1) d.classList.add('d-done');
+    else if(i===S.day) d.classList.add('d-today');
+    else if(S.missedDays.indexOf(i)!==-1 || i<S.day) d.classList.add('d-missed');
+    else d.classList.add('d-skip');
+    wrap.appendChild(d);
+  }
+}
+
+// ===== HAFTALIK =====
+function renderWeek(){
+  var days = ['Du','Se','Ch','Pa','Ju','Sh','Ya'];
+  var today = new Date();
+  var dow = today.getDay();
+  var off = dow===0 ? -6 : 1-dow;
+  var grid = document.getElementById('week-grid');
+  grid.innerHTML = '';
+  var wDone=0, wWords=0, wMiss=0;
+  for(var i=0;i<7;i++){
+    var d = new Date(today);
+    d.setDate(today.getDate()+off+i);
+    var dn = S.day - (today.getDate()-d.getDate());
+    var isDone = S.completedDays.indexOf(dn)!==-1;
+    var isMiss = S.missedDays.indexOf(dn)!==-1 || (dn<S.day && !isDone && dn>0);
+    var w = S.wordsPerDay['d'+dn] || 0;
+    if(isDone){wDone++;wWords+=w;}
+    if(isMiss) wMiss++;
+    var isToday = d.toDateString()===today.toDateString();
+    var box = document.createElement('div');
+    box.className = 'week-day';
+    if(isToday) box.style.border = '1px solid var(--purple2)';
+    box.innerHTML = '<div class="week-day-name">'+days[i]+'</div><div class="week-day-val '+(isMiss?'miss':'')+'">'+(isDone ? (w||'✓') : isMiss ? '✗' : '-')+'</div>';
+    grid.appendChild(box);
+  }
+  document.getElementById('w-done').textContent = wDone;
+  document.getElementById('w-words').textContent = wWords;
+  document.getElementById('w-miss').textContent = wMiss;
+  var mg = document.getElementById('month-grid');
+  mg.innerHTML = '';
+  for(var i=1;i<=TOTAL;i++){
+    var d = document.createElement('div');
+    d.style.cssText = 'height:16px;border-radius:3px;';
+    if(S.completedDays.indexOf(i)!==-1) d.style.background='var(--green)';
+    else if(S.missedDays.indexOf(i)!==-1||i<S.day) d.style.background='var(--red)';
+    else if(i===S.day) d.style.background='var(--purple)';
+    else d.style.background='var(--surface2)';
+    mg.appendChild(d);
+  }
+}
+
+// ===== TAHLIL =====
+function renderTahlil(){
+  var prog = Math.round(S.completedDays.length/TOTAL*100);
+  var str = S.completedDays.length>0 ? Math.min(100,Math.round(S.streak/S.completedDays.length*100)) : 0;
+  var wrd = Math.min(100,Math.max(0,Math.round((S.totalWords-2000)/3750*100)));
+  var tsk = S.totalTasksPossible>0 ? Math.round(S.totalTasksDone/S.totalTasksPossible*100) : 0;
+  var tp = S.completedDays.length*MAQSAD;
+  var drs = tp>0 ? Math.min(100,Math.round(S.totalDarsDone/tp*100)) : 0;
+  setBar('f-prog',prog); setBar('f-streak',str); setBar('f-words',wrd); setBar('f-tasks',tsk); setBar('f-dars',drs);
+  document.getElementById('r-streak').textContent = S.longestStreak;
+  document.getElementById('r-words').textContent = S.bestWordsDay;
+  document.getElementById('r-dars').textContent = S.totalDarsDone;
+}
+
+function setBar(id,pct){
+  var el = document.getElementById(id);
+  if(!el) return;
+  el.style.width = pct+'%';
+  el.textContent = pct+'%';
+}
+
+// ===== ESLATMA =====
+function renderNotes(){
+  document.getElementById('note-day-num').textContent = S.day;
+  var ni = document.getElementById('note-inp');
+  ni.value = S.notes['d'+S.day] || '';
+  ni.oninput = function(){ S.notes['d'+S.day]=this.value; save(); };
+  var prev = document.getElementById('prev-notes');
+  var keys = Object.keys(S.notes).filter(function(k){ return k!=='d'+S.day && S.notes[k]; }).slice(-5).reverse();
+  if(!keys.length){ prev.innerHTML='<div style="color:var(--hint);font-size:14px">Hali eslatmalar yo\'q.</div>'; return; }
+  var h = '';
+  for(var i=0;i<keys.length;i++){
+    var k=keys[i], dn=k.replace('d','');
+    var mr = S.missReasons['d'+dn] ? '<span style="color:var(--red);font-size:11px"> — '+S.missReasons['d'+dn]+'</span>' : '';
+    h += '<div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--border)">';
+    h += '<div style="font-size:12px;color:var(--purple);margin-bottom:4px">Kun '+dn+mr+'</div>';
+    h += '<div style="font-size:14px;color:var(--muted)">'+S.notes[k]+'</div></div>';
+  }
+  prev.innerHTML = h;
+}
+
+// ===== BOLIMLAR =====
+function renderBolimlar(){
+  var grid = document.getElementById('bolim-grid');
+  grid.innerHTML = '';
+  for(var i=0;i<S.bolimlar.length;i++){
+    var b = S.bolimlar[i];
+    var c = document.createElement('div');
+    c.className = 'bolim-card';
+    c.onclick = (function(bid){ return function(){ openBolim(bid); }; })(b.id);
+    c.innerHTML = '<div class="bolim-icon">'+b.icon+'</div><div class="bolim-name">'+b.name+'</div><div class="bolim-desc">'+b.desc+' &middot; '+b.entries.length+' yozuv</div>';
+    grid.appendChild(c);
+  }
+}
+
+function openBolim(id){
+  activeBolim = id;
+  var b = S.bolimlar.filter(function(x){return x.id===id;})[0];
+  document.getElementById('bolim-list-view').style.display='none';
+  document.getElementById('bolim-detail-view').style.display='block';
+  document.getElementById('bd-title').textContent = b.icon+' '+b.name;
+  document.getElementById('bd-inp').value = '';
+  renderEntries(b);
+}
+
+function renderEntries(b){
+  var c = document.getElementById('bd-entries');
+  if(!b.entries.length){ c.innerHTML='<div style="color:var(--hint);font-size:14px;padding:8px 0">Hali yozuv yo\'q.</div>'; return; }
+  var h='';
+  var sl = b.entries.slice(-10).reverse();
+  for(var i=0;i<sl.length;i++){
+    var e=sl[i];
+    h+='<div class="entry-box"><div class="entry-date">'+e.date+' — Kun '+e.day+'</div><div class="entry-text">'+e.text+'</div></div>';
+  }
+  c.innerHTML = h;
+}
+
+function saveBolimEntry(){
+  var txt = document.getElementById('bd-inp').value.trim();
+  if(!txt){ toast('Biror narsa yozing!'); return; }
+  var b = S.bolimlar.filter(function(x){return x.id===activeBolim;})[0];
+  b.entries.push({text:txt, date:new Date().toLocaleDateString('uz-UZ'), day:S.day});
+  save();
+  document.getElementById('bd-inp').value='';
+  renderEntries(b);
+  toast('Saqlandi!');
+}
+
+function closeBolim(){
+  activeBolim = null;
+  document.getElementById('bolim-list-view').style.display='block';
+  document.getElementById('bolim-detail-view').style.display='none';
+  renderBolimlar();
+}
+
+function addBolim(){
+  var name = prompt("Yangi bo'lim nomi:");
+  if(!name) return;
+  var icon = prompt('Emoji (masalan: 🎵)') || '📁';
+  var desc = prompt('Qisqacha tavsif:') || '';
+  S.bolimlar.push({id:'b'+Date.now(), icon:icon, name:name, desc:desc, entries:[]});
+  save(); renderBolimlar();
+  toast("Bo'lim qo'shildi!");
+}
+
+// ===== TIMER =====
+function toggleTimer(){
+  if(timerOn){
+    clearInterval(timerInt); timerOn=false;
+    document.getElementById('play-btn').innerHTML='&#9654; Davom ettir';
+    document.getElementById('play-btn').classList.remove('on');
+  } else {
+    timerOn=true;
+    document.getElementById('play-btn').innerHTML='&#9646;&#9646; To\'xtat';
+    document.getElementById('play-btn').classList.add('on');
+    timerInt=setInterval(function(){
+      if(timerSec>0){ timerSec--; updateTimer(); }
+      else{ clearInterval(timerInt); timerOn=false; document.getElementById('play-btn').innerHTML='&#10003; Tugadi!'; toast('2 soat tugadi! Zo\'r eding!'); }
+    },1000);
+  }
+}
+
+function resetTimer(){
+  clearInterval(timerInt); timerOn=false; timerSec=7200;
+  document.getElementById('play-btn').innerHTML='&#9654; Boshlash';
+  document.getElementById('play-btn').classList.remove('on');
+  updateTimer();
+}
+
+function updateTimer(){
+  var h=Math.floor(timerSec/3600), m=Math.floor((timerSec%3600)/60), s=timerSec%60;
+  document.getElementById('timer-disp').textContent=h+':'+('0'+m).slice(-2)+':'+('0'+s).slice(-2);
+  var pct=Math.round((7200-timerSec)/7200*100);
+  document.getElementById('t-fill').style.width=pct+'%';
+  document.getElementById('t-pct').textContent=pct+'% tugallandi';
+}
+
+// ===== UI =====
+function updateUI(){
+  var left=Math.max(0,TOTAL-S.day+1);
+  var pct=Math.round(S.completedDays.length/TOTAL*100);
+  document.getElementById('m-day').textContent=S.day;
+  document.getElementById('m-streak').textContent=S.streak;
+  document.getElementById('m-words').textContent=S.totalWords.toLocaleString();
+  document.getElementById('m-pct').textContent=pct+'%';
+  document.getElementById('m-left').textContent=left;
+  document.getElementById('hstreak').textContent=S.streak;
+  document.getElementById('hdate').textContent=new Date().toLocaleDateString('uz-UZ',{weekday:'long',day:'numeric',month:'long'});
+  renderTasks();
+  renderBugunDars();
+}
+
+function toast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); },3000);
+}
+</script>
+</body>
+</html>
